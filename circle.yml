@@ -5,7 +5,7 @@ machine:
     CIRCLE_ARTIFACTS: "coverage"
 dependencies:
   override:
-    - npm install --dev
+    - npm install
 general:
   artifacts:
     - "coverage"
