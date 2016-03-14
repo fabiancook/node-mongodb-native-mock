@@ -10,3 +10,6 @@ general:
   artifacts:
     - "coverage"
     - $CIRCLE_TEST_REPORTS
+test:
+  override:
+    - npm test && npm run coveralls
