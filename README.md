@@ -1,4 +1,3 @@
-# node-mongodb-native-mock
 # Node.js MongoDb Native Mock
 
 This is currently WIP
