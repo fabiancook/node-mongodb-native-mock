@@ -1,0 +1,42 @@
+{
+  "name": "mongodb-native-mock",
+  "version": "1.0.3",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "async": "^1.5.2",
+    "bson": "^0.4.21",
+    "chance": "^1.0.1",
+    "geojson": "^0.3.0",
+    "geolib": "^2.0.18",
+    "is-plain-object": "^2.0.1",
+    "levelup": "^1.3.1",
+    "lodash": "^4.5.1",
+    "memdown": "^1.1.2",
+    "natural": "^0.2.1",
+    "node-uuid": "^1.4.7",
+    "q": "^1.4.1",
+    "sinon": "^1.17.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chance": "^1.0.0",
+    "istanbul": "^0.4.2",
+    "mocha": "^2.4.5",
+    "mongodb": "2.1.7",
+    "mongodb-core": "1.3.1"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/istanbul cover -- _mocha test/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fabiancook/node-mongodb-native-mock.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fabiancook/node-mongodb-native-mock/issues"
+  },
+  "homepage": "https://github.com/fabiancook/node-mongodb-native-mock#readme"
+}
