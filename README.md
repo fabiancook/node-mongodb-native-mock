@@ -1,8 +1,6 @@
 # Node.js MongoDb Native Mock
 [![Circle CI](https://circleci.com/gh/fabiancook/node-mongodb-native-mock.svg?style=shield)](https://circleci.com/gh/fabiancook/node-mongodb-native-mock) [![Coverage Status](https://coveralls.io/repos/github/fabiancook/node-mongodb-native-mock/badge.svg?branch=master)](https://coveralls.io/github/fabiancook/node-mongodb-native-mock?branch=master)
 
-[![Coverage Status](https://coveralls.io/repos/github/fabiancook/node-mongodb-native-mock/badge.svg?branch=master)](https://coveralls.io/github/fabiancook/node-mongodb-native-mock?branch=master)
-
 This is currently WIP
 
 ## Running tests
