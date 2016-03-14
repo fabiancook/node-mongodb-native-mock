@@ -35,7 +35,7 @@
     "url": "git+https://github.com/fabiancook/node-mongodb-native-mock.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/fabiancook/node-mongodb-native-mock/issues"
   },
