@@ -17,10 +17,10 @@
 const Expect      = require('chai').expect,
   Q           = require('q'),
   Setup       = require('../../setup'),
-  Compare     = require('../../../lib/document/match/bson-compare');
+  Compare     = require('../../../../lib/document/match/bson-compare');
 
-// https://docs.mongodb.org/manual/tutorial/remove-documents/#remove-all-documents
-describe('Remove Documents - Remove All Documents', function(){
+// https://docs.mongodb.org/manual/tutorial/query-documents/#existence-check
+describe('Find - Tutorial - Query Documents - Existence Check', function(){
 
   function runSpec(connect) {
 
@@ -42,21 +42,28 @@ describe('Remove Documents - Remove All Documents', function(){
       return collection.insert({ "_id" : 901 });
     });
 
-    it('should allow inserts', function(){
-      return collection.insert({ "_id" : 902 });
-    });
-
-    specify('Remove All Documents', function(){
-      return collection.remove({});
-    });
-
-    it('should have no documents', function(){
-      return collection.find({})
+    specify('query', function(){
+      return collection.find({ item: null })
         .toArray()
-        .then(function(documents) {
-          Expect(documents).to.have.lengthOf(0);
+        .then(function(documents){
+          Expect(documents).to.be.instanceOf(Array);
+          Expect(documents).to.have.lengthOf(2);
+
+          Expect(documents[0]._id).to.be.oneOf([
+            900, 901
+          ]);
+
+          Expect((
+            Compare.equal({ "_id" : 900, "item" : null }, documents[0]) ||
+            Compare.equal({ "_id" : 900, "item" : null }, documents[0])
+          )).to.equal(true);
+
+          Expect((
+            Compare.equal({ "_id" : 901 }, documents[1]) ||
+            Compare.equal({ "_id" : 901 }, documents[1])
+          )).to.equal(true);
         });
-    })
+    });
 
   }
 

@@ -17,9 +17,9 @@
 const Expect      = require('chai').expect,
   Q           = require('q'),
   Setup       = require('../../setup'),
-  Compare     = require('../../../lib/document/match/bson-compare');
+  Compare     = require('../../../../lib/document/match/bson-compare');
 
-// https://docs.mongodb.org/manual/tutorial/query-documents/#single-element-satisfies-the-criteria
+// https://docs.mongodb.org/manual/tutorial/query-documents/#id3
 describe('Find - Tutorial - Query Documents - Arrays - Single Element Satisfies the Criteria', function(){
 
   function runSpec(connect) {
@@ -35,39 +35,60 @@ describe('Find - Tutorial - Query Documents - Arrays - Single Element Satisfies 
     });
 
     it('should allow inserts', function(){
-      return collection.insert({ _id: 5, type: "food", item: "aaa", ratings: [ 5, 8, 9 ] });
+      return collection.insert({
+          _id: 100,
+          type: "food",
+          item: "xyz",
+          qty: 25,
+          price: 2.5,
+          ratings: [ 5, 8, 9 ],
+          memos: [ { memo: "on time", by: "shipping" }, { memo: "approved", by: "billing" } ]
+        }
+      );
     });
 
     it('should allow inserts', function(){
-      return collection.insert({ _id: 6, type: "food", item: "bbb", ratings: [ 5, 9 ] });
-    });
-
-    it('should allow inserts', function(){
-      return collection.insert({ _id: 7, type: "food", item: "ccc", ratings: [ 9, 5, 8 ] });
+      return collection.insert({
+        _id: 101,
+        type: "fruit",
+        item: "jkl",
+        qty: 10,
+        price: 4.25,
+        ratings: [ 5, 9 ],
+        memos: [ { memo: "on time", by: "payment" }, { memo: "delayed", by: "shipping" } ]
+      });
     });
 
     specify('query', function(){
-      return collection.find({ ratings: { $elemMatch: { $gt: 5, $lt: 9 } } })
+      return collection.find({
+          memos:
+          {
+            $elemMatch:
+            {
+              memo: 'on time',
+              by: 'shipping'
+            }
+          }
+        })
         .toArray()
         .then(function(documents){
           Expect(documents).to.be.instanceOf(Array);
-          Expect(documents).to.have.lengthOf(2);
+          Expect(documents).to.have.lengthOf(1);
 
           Expect(documents[0]._id).to.be.oneOf([
-            5, 7
-          ]);
-          Expect(documents[1]._id).to.be.oneOf([
-            5, 7
+            100
           ]);
 
           Expect((
-            Compare.equal({ "_id" : 5, "type" : "food", "item" : "aaa", "ratings" : [ 5, 8, 9 ] }, documents[0]) ||
-            Compare.equal({ "_id" : 5, "type" : "food", "item" : "aaa", "ratings" : [ 5, 8, 9 ] }, documents[1])
-          )).to.equal(true);
-
-          Expect((
-            Compare.equal({ "_id" : 7, "type" : "food", "item" : "ccc", "ratings" : [ 9, 5, 8 ] }, documents[0]) ||
-            Compare.equal({ "_id" : 7, "type" : "food", "item" : "ccc", "ratings" : [ 9, 5, 8 ] }, documents[1])
+            Compare.equal({
+              _id: 100,
+              type: "food",
+              item: "xyz",
+              qty: 25,
+              price: 2.5,
+              ratings: [ 5, 8, 9 ],
+              memos: [ { memo: "on time", by: "shipping" }, { memo: "approved", by: "billing" } ]
+            }, documents[0])
           )).to.equal(true);
         });
     });

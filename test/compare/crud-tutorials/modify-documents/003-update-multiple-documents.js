@@ -17,7 +17,7 @@
 const Expect      = require('chai').expect,
   Q           = require('q'),
   Setup       = require('../../setup'),
-  Compare     = require('../../../lib/document/match/bson-compare');
+  Compare     = require('../../../../lib/document/match/bson-compare');
 
 // https://docs.mongodb.org/manual/tutorial/modify-documents/#update-multiple-documents
 describe('Tutorial - Modify Documents - Update multiple documents', function(){

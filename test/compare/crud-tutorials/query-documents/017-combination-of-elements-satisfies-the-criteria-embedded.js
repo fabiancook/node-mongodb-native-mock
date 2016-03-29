@@ -17,10 +17,10 @@
 const Expect      = require('chai').expect,
   Q           = require('q'),
   Setup       = require('../../setup'),
-  Compare     = require('../../../lib/document/match/bson-compare');
+  Compare     = require('../../../../lib/document/match/bson-compare');
 
-// https://docs.mongodb.org/manual/tutorial/query-documents/#match-a-field-in-the-embedded-document-using-the-array-index
-describe('Find - Tutorial - Query Documents - Arrays - Match a Field in the Embedded Document Using the Array Index', function(){
+// https://docs.mongodb.org/manual/tutorial/query-documents/#id4
+describe('Find - Tutorial - Query Documents - Arrays - Combination of Elements Satisfies the Criteria', function(){
 
   function runSpec(connect) {
 
@@ -60,14 +60,17 @@ describe('Find - Tutorial - Query Documents - Arrays - Match a Field in the Embe
     });
 
     specify('query', function(){
-      return collection.find({ 'memos.0.by': 'shipping' })
+      return collection.find({
+          'memos.memo': 'on time',
+          'memos.by': 'shipping'
+        })
         .toArray()
         .then(function(documents){
           Expect(documents).to.be.instanceOf(Array);
-          Expect(documents).to.have.lengthOf(1);
+          Expect(documents).to.have.lengthOf(2);
 
           Expect(documents[0]._id).to.be.oneOf([
-            100
+            100, 101
           ]);
 
           Expect((
@@ -79,7 +82,37 @@ describe('Find - Tutorial - Query Documents - Arrays - Match a Field in the Embe
               price: 2.5,
               ratings: [ 5, 8, 9 ],
               memos: [ { memo: "on time", by: "shipping" }, { memo: "approved", by: "billing" } ]
+            }, documents[0]) ||
+            Compare.equal({
+              _id: 101,
+              type: "fruit",
+              item: "jkl",
+              qty: 10,
+              price: 4.25,
+              ratings: [ 5, 9 ],
+              memos: [ { memo: "on time", by: "payment" }, { memo: "delayed", by: "shipping" } ]
             }, documents[0])
+          )).to.equal(true);
+
+          Expect((
+            Compare.equal({
+              _id: 100,
+              type: "food",
+              item: "xyz",
+              qty: 25,
+              price: 2.5,
+              ratings: [ 5, 8, 9 ],
+              memos: [ { memo: "on time", by: "shipping" }, { memo: "approved", by: "billing" } ]
+            }, documents[1]) ||
+            Compare.equal({
+              _id: 101,
+              type: "fruit",
+              item: "jkl",
+              qty: 10,
+              price: 4.25,
+              ratings: [ 5, 9 ],
+              memos: [ { memo: "on time", by: "payment" }, { memo: "delayed", by: "shipping" } ]
+            }, documents[1])
           )).to.equal(true);
         });
     });

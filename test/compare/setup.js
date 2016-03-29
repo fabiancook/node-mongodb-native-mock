@@ -16,7 +16,7 @@
 
 const Expect      = require('chai').expect,
       MongoDb     = require('mongodb'),
-      MongoDbMock = require('../'),
+      MongoDbMock = require('../../'),
       UUID        = require('node-uuid'),
       Q           = require('q');
 

@@ -17,10 +17,10 @@
 const Expect      = require('chai').expect,
   Q           = require('q'),
   Setup       = require('../../setup'),
-  Compare     = require('../../../lib/document/match/bson-compare');
+  Compare     = require('../../../../lib/document/match/bson-compare');
 
-// https://docs.mongodb.org/manual/tutorial/query-documents/#match-a-specific-element-of-an-array
-describe('Find - Tutorial - Query Documents - Arrays - Match a Specific Element of an Array', function(){
+// https://docs.mongodb.org/manual/tutorial/query-documents/#combination-of-elements-satisfies-the-criteria
+describe('Find - Tutorial - Query Documents - Arrays - Combination of Elements Satisfies the Criteria', function(){
 
   function runSpec(connect) {
 
@@ -47,27 +47,38 @@ describe('Find - Tutorial - Query Documents - Arrays - Match a Specific Element 
     });
 
     specify('query', function(){
-      return collection.find({ 'ratings.0': 5 })
+      return collection.find({ ratings: { $gt: 5, $lt: 9 } })
         .toArray()
         .then(function(documents){
           Expect(documents).to.be.instanceOf(Array);
-          Expect(documents).to.have.lengthOf(2);
+          Expect(documents).to.have.lengthOf(3);
 
           Expect(documents[0]._id).to.be.oneOf([
-            5, 6
+            5, 6, 7
           ]);
           Expect(documents[1]._id).to.be.oneOf([
-            5, 6
+            5, 6, 7
+          ]);
+          Expect(documents[2]._id).to.be.oneOf([
+            5, 6, 7
           ]);
 
           Expect((
             Compare.equal({ "_id" : 5, "type" : "food", "item" : "aaa", "ratings" : [ 5, 8, 9 ] }, documents[0]) ||
-            Compare.equal({ "_id" : 5, "type" : "food", "item" : "aaa", "ratings" : [ 5, 8, 9 ] }, documents[1])
+            Compare.equal({ "_id" : 5, "type" : "food", "item" : "aaa", "ratings" : [ 5, 8, 9 ] }, documents[1]) ||
+            Compare.equal({ "_id" : 5, "type" : "food", "item" : "aaa", "ratings" : [ 5, 8, 9 ] }, documents[2])
           )).to.equal(true);
 
           Expect((
             Compare.equal({ "_id" : 6, "type" : "food", "item" : "bbb", "ratings" : [ 5, 9 ] }, documents[0]) ||
-            Compare.equal({ "_id" : 6, "type" : "food", "item" : "bbb", "ratings" : [ 5, 9 ] }, documents[1])
+            Compare.equal({ "_id" : 6, "type" : "food", "item" : "bbb", "ratings" : [ 5, 9 ] }, documents[1]) ||
+            Compare.equal({ "_id" : 6, "type" : "food", "item" : "bbb", "ratings" : [ 5, 9 ] }, documents[2])
+          )).to.equal(true);
+
+          Expect((
+            Compare.equal({ "_id" : 7, "type" : "food", "item" : "ccc", "ratings" : [ 9, 5, 8 ] }, documents[0]) ||
+            Compare.equal({ "_id" : 7, "type" : "food", "item" : "ccc", "ratings" : [ 9, 5, 8 ] }, documents[1]) ||
+            Compare.equal({ "_id" : 7, "type" : "food", "item" : "ccc", "ratings" : [ 9, 5, 8 ] }, documents[2])
           )).to.equal(true);
         });
     });

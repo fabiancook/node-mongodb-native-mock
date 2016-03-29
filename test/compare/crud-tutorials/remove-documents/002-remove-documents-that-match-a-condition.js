@@ -17,10 +17,10 @@
 const Expect      = require('chai').expect,
   Q           = require('q'),
   Setup       = require('../../setup'),
-  Compare     = require('../../../lib/document/match/bson-compare');
+  Compare     = require('../../../../lib/document/match/bson-compare');
 
-// https://docs.mongodb.org/manual/tutorial/query-documents/#type-check
-describe('Find - Tutorial - Query Documents - Type Check', function(){
+// https://docs.mongodb.org/manual/tutorial/remove-documents/#remove-documents-that-match-a-condition
+describe('Remove Documents - Remove Documents that Match a Condition', function(){
 
   function runSpec(connect) {
 
@@ -35,29 +35,29 @@ describe('Find - Tutorial - Query Documents - Type Check', function(){
     });
 
     it('should allow inserts', function(){
-      return collection.insert({ "_id" : 900, "item" : null });
+      return collection.insert({ "name": "burgers", "type" : "food" });
     });
 
     it('should allow inserts', function(){
-      return collection.insert({ "_id" : 901 });
+      return collection.insert({ "name": "coke", "type" : "drinks" });
     });
 
-    specify('query', function(){
-      return collection.find({ item : { $exists: false } })
+    it('should allow inserts', function(){
+      return collection.insert({ "name": "fries", "type" : "food" });
+    });
+
+    specify('Remove Documents that Match a Condition', function(){
+      return collection.remove({ "type": "food" });
+    });
+
+    it('should have no documents', function(){
+      return collection.find({})
         .toArray()
-        .then(function(documents){
-          Expect(documents).to.be.instanceOf(Array);
+        .then(function(documents) {
           Expect(documents).to.have.lengthOf(1);
-
-          Expect(documents[0]._id).to.be.oneOf([
-            901
-          ]);
-
-          Expect((
-            Compare.equal({ "_id" : 901 }, documents[0])
-          )).to.equal(true);
+          Expect(documents[0].name).to.equal("coke");
         });
-    });
+    })
 
   }
 

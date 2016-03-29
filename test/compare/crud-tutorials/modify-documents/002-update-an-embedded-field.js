@@ -17,10 +17,10 @@
 const Expect      = require('chai').expect,
   Q           = require('q'),
   Setup       = require('../../setup'),
-  Compare     = require('../../../lib/document/match/bson-compare');
+  Compare     = require('../../../../lib/document/match/bson-compare');
 
-// https://docs.mongodb.org/manual/tutorial/query-documents/#exact-match-on-an-array
-describe('Find - Tutorial - Query Documents - Arrays - Exact Match on an Array', function(){
+// https://docs.mongodb.org/manual/tutorial/modify-documents/#update-an-embedded-field
+describe('Tutorial - Modify Documents - Update an embedded field', function(){
 
   function runSpec(connect) {
 
@@ -34,27 +34,31 @@ describe('Find - Tutorial - Query Documents - Arrays - Exact Match on an Array',
         })
     });
 
-    it('should allow inserts', function(){
-      return collection.insert({ _id: 5, type: "food", item: "aaa", ratings: [ 5, 8, 9 ] });
+    it('should insert a document', function(){
+      return collection.insert({
+        item: 'ABC1',
+        category: 'snacks',
+        details: { cake: true, model: "14Q1" },
+        lastModified: new Date(2000, 0, 1)
+      });
     });
 
-    it('should allow inserts', function(){
-      return collection.insert({ _id: 6, type: "food", item: "bbb", ratings: [ 5, 9 ] });
+    specify('Update an embedded field', function(){
+      return collection.update(
+        { item: "ABC1" },
+        { $set: { "details.model": "14Q2" } }
+      )
+        .then(function(result) {
+          Expect(result.result.nModified).to.equal(1);
+        });
     });
 
-    it('should allow inserts', function(){
-      return collection.insert({ _id: 7, type: "food", item: "ccc", ratings: [ 9, 5, 8 ] });
-    });
-
-    specify('query', function(){
-      return collection.find({ ratings: [ 5, 8, 9 ] })
+    it('should update details.model', function(){
+      return collection.find({ item: "ABC1" })
         .toArray()
-        .then(function(documents){
-          Expect(documents).to.be.instanceOf(Array);
+        .then(function(documents) {
           Expect(documents).to.have.lengthOf(1);
-
-          Expect(documents[0]._id).to.equal(5);
-          Expect(Compare.equal(documents[0], { "_id" : 5, "type" : "food", "item" : "aaa", "ratings" : [ 5, 8, 9 ] })).to.equal(true);
+          Expect(documents[0].details.model).to.equal('14Q2');
         });
     });
 

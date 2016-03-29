@@ -17,10 +17,10 @@
 const Expect      = require('chai').expect,
   Q           = require('q'),
   Setup       = require('../../setup'),
-  Compare     = require('../../../lib/document/match/bson-compare');
+  Compare     = require('../../../../lib/document/match/bson-compare');
 
-// https://docs.mongodb.org/manual/tutorial/query-documents/#equality-filter
-describe('Find - Tutorial - Query Documents - Null or Missing Fields - Equality Filter', function(){
+// https://docs.mongodb.org/manual/tutorial/query-documents/#match-a-field-in-the-embedded-document-using-the-array-index
+describe('Find - Tutorial - Query Documents - Arrays - Match a Field in the Embedded Document Using the Array Index', function(){
 
   function runSpec(connect) {
 
@@ -35,32 +35,51 @@ describe('Find - Tutorial - Query Documents - Null or Missing Fields - Equality 
     });
 
     it('should allow inserts', function(){
-      return collection.insert({ "_id" : 900, "item" : null });
+      return collection.insert({
+          _id: 100,
+          type: "food",
+          item: "xyz",
+          qty: 25,
+          price: 2.5,
+          ratings: [ 5, 8, 9 ],
+          memos: [ { memo: "on time", by: "shipping" }, { memo: "approved", by: "billing" } ]
+        }
+      );
     });
 
     it('should allow inserts', function(){
-      return collection.insert({ "_id" : 901 });
+      return collection.insert({
+        _id: 101,
+        type: "fruit",
+        item: "jkl",
+        qty: 10,
+        price: 4.25,
+        ratings: [ 5, 9 ],
+        memos: [ { memo: "on time", by: "payment" }, { memo: "delayed", by: "shipping" } ]
+      });
     });
 
     specify('query', function(){
-      return collection.find({ item: null })
+      return collection.find({ 'memos.0.by': 'shipping' })
         .toArray()
         .then(function(documents){
           Expect(documents).to.be.instanceOf(Array);
-          Expect(documents).to.have.lengthOf(2);
+          Expect(documents).to.have.lengthOf(1);
 
           Expect(documents[0]._id).to.be.oneOf([
-            900, 901
+            100
           ]);
 
           Expect((
-            Compare.equal({ "_id" : 900, "item" : null }, documents[0]) ||
-            Compare.equal({ "_id" : 900, "item" : null }, documents[0])
-          )).to.equal(true);
-
-          Expect((
-            Compare.equal({ "_id" : 901 }, documents[1]) ||
-            Compare.equal({ "_id" : 901 }, documents[1])
+            Compare.equal({
+              _id: 100,
+              type: "food",
+              item: "xyz",
+              qty: 25,
+              price: 2.5,
+              ratings: [ 5, 8, 9 ],
+              memos: [ { memo: "on time", by: "shipping" }, { memo: "approved", by: "billing" } ]
+            }, documents[0])
           )).to.equal(true);
         });
     });

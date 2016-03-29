@@ -17,33 +17,12 @@
 const Expect      = require('chai').expect,
   Q           = require('q'),
   Setup       = require('../../setup'),
-  Compare     = require('../../../lib/document/match/bson-compare');
+  Compare     = require('../../../../lib/document/match/bson-compare');
 
-// https://docs.mongodb.org/manual/tutorial/insert-documents/#insert-an-array-of-documents
-describe('Tutorial - Insert Documents - Insert an Array of Documents', function(){
+// https://docs.mongodb.org/manual/tutorial/query-documents/#select-all-documents-in-a-collection
+describe('Tutorial - Insert Documents - Insert a Document', function(){
 
   function runSpec(connect) {
-
-    const myDocuments = [
-      {
-        item: "ABC2",
-        details: { model: "14Q3", manufacturer: "M1 Corporation" },
-        stock: [ { size: "M", qty: 50 } ],
-        category: "clothing"
-      },
-      {
-        item: "MNO2",
-        details: { model: "14Q3", manufacturer: "ABC Company" },
-        stock: [ { size: "S", qty: 5 }, { size: "M", qty: 5 }, { size: "L", qty: 1 } ],
-        category: "clothing"
-      },
-      {
-        item: "IJK2",
-        details: { model: "14Q2", manufacturer: "M5 Corporation" },
-        stock: [ { size: "S", qty: 5 }, { size: "L", qty: 1 } ],
-        category: "houseware"
-      }
-    ];
 
     var db, collection;
 
@@ -55,10 +34,20 @@ describe('Tutorial - Insert Documents - Insert an Array of Documents', function(
         })
     });
 
-    specify('Insert the documents', function(){
-      return collection.insert(myDocuments)
+    specify('Insert a document into a collection.', function(){
+      return collection.insert(
+        {
+          item: "ABC1",
+          details: {
+            model: "14Q3",
+            manufacturer: "XYZ Company"
+          },
+          stock: [ { size: "S", qty: 25 }, { size: "M", qty: 50 } ],
+          category: "clothing"
+        }
+      )
         .then(function(result) {
-          Expect(result.insertedCount).to.equal(3)
+          Expect(result.insertedCount).to.equal(1)
         })
     });
 
@@ -66,8 +55,19 @@ describe('Tutorial - Insert Documents - Insert an Array of Documents', function(
       return collection.find()
         .toArray()
         .then(function(documents) {
-          Expect(documents).to.have.lengthOf(3);
-
+          Expect(documents).to.have.lengthOf(1);
+          // Delete the _id so it matches
+          // The document should have the same order as previous
+          delete documents[0]._id;
+          Expect(Compare.equal({
+            item: "ABC1",
+            details: {
+              model: "14Q3",
+              manufacturer: "XYZ Company"
+            },
+            stock: [ { size: "S", qty: 25 }, { size: "M", qty: 50 } ],
+            category: "clothing"
+          }, documents[0])).to.equal(true);
         });
     });
 

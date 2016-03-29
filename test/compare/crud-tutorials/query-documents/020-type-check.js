@@ -17,10 +17,10 @@
 const Expect      = require('chai').expect,
   Q           = require('q'),
   Setup       = require('../../setup'),
-  Compare     = require('../../../lib/document/match/bson-compare');
+  Compare     = require('../../../../lib/document/match/bson-compare');
 
-// https://docs.mongodb.org/manual/tutorial/query-documents/#existence-check
-describe('Find - Tutorial - Query Documents - Existence Check', function(){
+// https://docs.mongodb.org/manual/tutorial/query-documents/#type-check
+describe('Find - Tutorial - Query Documents - Type Check', function(){
 
   function runSpec(connect) {
 
@@ -43,24 +43,18 @@ describe('Find - Tutorial - Query Documents - Existence Check', function(){
     });
 
     specify('query', function(){
-      return collection.find({ item: null })
+      return collection.find({ item : { $exists: false } })
         .toArray()
         .then(function(documents){
           Expect(documents).to.be.instanceOf(Array);
-          Expect(documents).to.have.lengthOf(2);
+          Expect(documents).to.have.lengthOf(1);
 
           Expect(documents[0]._id).to.be.oneOf([
-            900, 901
+            901
           ]);
 
           Expect((
-            Compare.equal({ "_id" : 900, "item" : null }, documents[0]) ||
-            Compare.equal({ "_id" : 900, "item" : null }, documents[0])
-          )).to.equal(true);
-
-          Expect((
-            Compare.equal({ "_id" : 901 }, documents[1]) ||
-            Compare.equal({ "_id" : 901 }, documents[1])
+            Compare.equal({ "_id" : 901 }, documents[0])
           )).to.equal(true);
         });
     });

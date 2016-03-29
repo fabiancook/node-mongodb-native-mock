@@ -17,10 +17,10 @@
 const Expect      = require('chai').expect,
   Q           = require('q'),
   Setup       = require('../../setup'),
-  Compare     = require('../../../lib/document/match/bson-compare');
+  Compare     = require('../../../../lib/document/match/bson-compare');
 
-// https://docs.mongodb.org/manual/tutorial/modify-documents/#update-an-embedded-field
-describe('Tutorial - Modify Documents - Update an embedded field', function(){
+// https://docs.mongodb.org/manual/tutorial/modify-documents/#update-multiple-documents
+describe('Tutorial - Modify Documents - Update multiple documents', function(){
 
   function runSpec(connect) {
 
@@ -36,17 +36,21 @@ describe('Tutorial - Modify Documents - Update an embedded field', function(){
 
     it('should insert a document', function(){
       return collection.insert({
-        item: 'ABC1',
+        item: 'BE10',
         category: 'snacks',
         details: { cake: true, model: "14Q1" },
         lastModified: new Date(2000, 0, 1)
       });
     });
 
-    specify('Update an embedded field', function(){
+    specify('Replace a document', function(){
       return collection.update(
-        { item: "ABC1" },
-        { $set: { "details.model": "14Q2" } }
+        { item: 'BE10' },
+        {
+          item: "BE05",
+          stock: [ { size: "S", qty: 20 }, { size: "M", qty: 5 } ],
+          category: "apparel"
+        }
       )
         .then(function(result) {
           Expect(result.result.nModified).to.equal(1);
@@ -54,11 +58,29 @@ describe('Tutorial - Modify Documents - Update an embedded field', function(){
     });
 
     it('should update details.model', function(){
-      return collection.find({ item: "ABC1" })
+      return collection.find({ category: "apparel" })
         .toArray()
         .then(function(documents) {
           Expect(documents).to.have.lengthOf(1);
-          Expect(documents[0].details.model).to.equal('14Q2');
+          Expect(documents[0].category).to.equal('apparel');
+        });
+    });
+
+    it('should set stock', function(){
+      return collection.find({ category: "apparel" })
+        .toArray()
+        .then(function(documents) {
+          Expect(documents).to.have.lengthOf(1);
+          Expect(Compare.equal(documents[0].stock, [ { size: "S", qty: 20 }, { size: "M", qty: 5 } ])).to.equal(true);
+        });
+    });
+
+    it('should update item', function(){
+      return collection.find({ category: "apparel" })
+        .toArray()
+        .then(function(documents) {
+          Expect(documents).to.have.lengthOf(1);
+          Expect(documents[0].item).to.equal('BE05');
         });
     });
 

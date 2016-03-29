@@ -18,7 +18,7 @@ const Expect = require('chai').expect,
   Sinon  = require('sinon'),
   Impl   = require('../../../lib/document/field');
 
-describe.only('Document, Field', function() {
+describe('Document, Field', function() {
 
 
   describe('getValues', function(){
@@ -705,7 +705,7 @@ describe.only('Document, Field', function() {
 
   });
 
-  describe.only('getFieldFromObject', function(){
+  describe('getFieldFromObject', function(){
 
     specify('is a function', function(){
       Expect(Impl.getFieldFromObject).to.be.instanceOf(Function);

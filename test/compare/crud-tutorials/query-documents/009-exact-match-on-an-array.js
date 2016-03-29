@@ -17,10 +17,10 @@
 const Expect      = require('chai').expect,
   Q           = require('q'),
   Setup       = require('../../setup'),
-  Compare     = require('../../../lib/document/match/bson-compare');
+  Compare     = require('../../../../lib/document/match/bson-compare');
 
-// https://docs.mongodb.org/manual/tutorial/remove-documents/#remove-documents-that-match-a-condition
-describe.only('Remove Documents - Remove Documents that Match a Condition', function(){
+// https://docs.mongodb.org/manual/tutorial/query-documents/#exact-match-on-an-array
+describe('Find - Tutorial - Query Documents - Arrays - Exact Match on an Array', function(){
 
   function runSpec(connect) {
 
@@ -35,29 +35,28 @@ describe.only('Remove Documents - Remove Documents that Match a Condition', func
     });
 
     it('should allow inserts', function(){
-      return collection.insert({ "name": "burgers", "type" : "food" });
+      return collection.insert({ _id: 5, type: "food", item: "aaa", ratings: [ 5, 8, 9 ] });
     });
 
     it('should allow inserts', function(){
-      return collection.insert({ "name": "coke", "type" : "drinks" });
+      return collection.insert({ _id: 6, type: "food", item: "bbb", ratings: [ 5, 9 ] });
     });
 
     it('should allow inserts', function(){
-      return collection.insert({ "name": "fries", "type" : "food" });
+      return collection.insert({ _id: 7, type: "food", item: "ccc", ratings: [ 9, 5, 8 ] });
     });
 
-    specify('Remove Documents that Match a Condition', function(){
-      return collection.remove({ "type": "food" });
-    });
-
-    it('should have no documents', function(){
-      return collection.find({})
+    specify('query', function(){
+      return collection.find({ ratings: [ 5, 8, 9 ] })
         .toArray()
-        .then(function(documents) {
+        .then(function(documents){
+          Expect(documents).to.be.instanceOf(Array);
           Expect(documents).to.have.lengthOf(1);
-          Expect(documents[0].name).to.equal("coke");
+
+          Expect(documents[0]._id).to.equal(5);
+          Expect(Compare.equal(documents[0], { "_id" : 5, "type" : "food", "item" : "aaa", "ratings" : [ 5, 8, 9 ] })).to.equal(true);
         });
-    })
+    });
 
   }
 

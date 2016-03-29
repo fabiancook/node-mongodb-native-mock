@@ -17,10 +17,10 @@
 const Expect      = require('chai').expect,
   Q           = require('q'),
   Setup       = require('../../setup'),
-  Compare     = require('../../../lib/document/match/bson-compare');
+  Compare     = require('../../../../lib/document/match/bson-compare');
 
-// https://docs.mongodb.org/manual/tutorial/remove-documents/#remove-a-single-document-that-matches-a-condition
-describe.only('Remove Documents - Remove a Single Document that Matches a Condition', function(){
+// https://docs.mongodb.org/manual/tutorial/query-documents/#equality-filter
+describe('Find - Tutorial - Query Documents - Null or Missing Fields - Equality Filter', function(){
 
   function runSpec(connect) {
 
@@ -35,28 +35,35 @@ describe.only('Remove Documents - Remove a Single Document that Matches a Condit
     });
 
     it('should allow inserts', function(){
-      return collection.insert({ "name": "burgers", "type" : "food" });
+      return collection.insert({ "_id" : 900, "item" : null });
     });
 
     it('should allow inserts', function(){
-      return collection.insert({ "name": "coke", "type" : "drinks" });
+      return collection.insert({ "_id" : 901 });
     });
 
-    it('should allow inserts', function(){
-      return collection.insert({ "name": "fries", "type" : "food" });
-    });
-
-    specify('Remove a Single Document that Matches a Condition', function(){
-      return collection.remove({ "type": "food" }, { single: true });
-    });
-
-    it('should have no documents', function(){
-      return collection.find({})
+    specify('query', function(){
+      return collection.find({ item: null })
         .toArray()
-        .then(function(documents) {
+        .then(function(documents){
+          Expect(documents).to.be.instanceOf(Array);
           Expect(documents).to.have.lengthOf(2);
+
+          Expect(documents[0]._id).to.be.oneOf([
+            900, 901
+          ]);
+
+          Expect((
+            Compare.equal({ "_id" : 900, "item" : null }, documents[0]) ||
+            Compare.equal({ "_id" : 900, "item" : null }, documents[0])
+          )).to.equal(true);
+
+          Expect((
+            Compare.equal({ "_id" : 901 }, documents[1]) ||
+            Compare.equal({ "_id" : 901 }, documents[1])
+          )).to.equal(true);
         });
-    })
+    });
 
   }
 
