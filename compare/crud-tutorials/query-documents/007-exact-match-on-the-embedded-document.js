@@ -16,7 +16,7 @@
 
 const Expect      = require('chai').expect,
   Q           = require('q'),
-  Setup       = require('../../../../setup');
+  Setup       = require('../../setup');
 
 // https://docs.mongodb.org/manual/tutorial/query-documents/#exact-match-on-the-embedded-document
 describe('Find - Tutorial - Query Documents - Embedded Documents - Exact Match on the Embedded Document', function(){

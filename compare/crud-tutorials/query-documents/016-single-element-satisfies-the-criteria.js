@@ -16,8 +16,8 @@
 
 const Expect      = require('chai').expect,
   Q           = require('q'),
-  Setup       = require('../../../../setup'),
-  Compare     = require('../../../../../lib/document/match/bson-compare');
+  Setup       = require('../../setup'),
+  Compare     = require('../../../lib/document/match/bson-compare');
 
 // https://docs.mongodb.org/manual/tutorial/query-documents/#single-element-satisfies-the-criteria
 describe('Find - Tutorial - Query Documents - Arrays - Single Element Satisfies the Criteria', function(){

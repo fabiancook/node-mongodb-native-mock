@@ -16,7 +16,7 @@
 
 const Expect      = require('chai').expect,
   Q           = require('q'),
-  Setup       = require('../../../setup');
+  Setup       = require('../../setup');
 
 // https://docs.mongodb.org/manual/tutorial/query-documents/#specify-conditions-using-query-operators
 describe('Find - Tutorial - Query Documents - Specify Conditions Using Query Operators', function(){

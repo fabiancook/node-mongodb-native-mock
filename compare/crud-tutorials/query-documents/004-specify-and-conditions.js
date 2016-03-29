@@ -16,7 +16,7 @@
 
 const Expect      = require('chai').expect,
   Q           = require('q'),
-  Setup       = require('../../../setup');
+  Setup       = require('../../setup');
 
 // https://docs.mongodb.org/manual/tutorial/query-documents/#specify-and-conditions
 describe('Find - Tutorial - Query Documents - Specify AND Conditions', function(){

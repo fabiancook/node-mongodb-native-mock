@@ -16,7 +16,7 @@
 
 const Expect      = require('chai').expect,
   Q           = require('q'),
-  Setup       = require('../../../../setup');
+  Setup       = require('../../setup');
 
 // https://docs.mongodb.org/manual/tutorial/query-documents/#equality-match-on-fields-within-an-embedded-document
 describe('Find - Tutorial - Query Documents - Embedded Documents - Equality Match on Fields within an Embedded Document', function(){

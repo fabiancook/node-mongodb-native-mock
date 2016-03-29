@@ -16,7 +16,7 @@
 
 const Expect      = require('chai').expect,
       Q           = require('q'),
-      Setup       = require('../setup');
+      Setup       = require('./setup');
 
 describe('Find - Simple', function(){
 

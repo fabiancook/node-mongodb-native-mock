@@ -16,7 +16,7 @@
 
 const Expect      = require('chai').expect,
       Q           = require('q'),
-      Setup       = require('../../../setup');
+      Setup       = require('../../setup');
 
 // https://docs.mongodb.org/manual/tutorial/query-documents/#select-all-documents-in-a-collection
 describe('Find - Tutorial - Query Documents - Select All Documents in a Collection', function(){
