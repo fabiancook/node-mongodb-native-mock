@@ -19,8 +19,8 @@ const Expect      = require('chai').expect,
   Setup       = require('../../../../setup'),
   Compare     = require('../../../../../lib/document/match/bson-compare');
 
-// https://docs.mongodb.org/manual/tutorial/query-documents/#exact-match-on-an-array
-describe('Find - Tutorial - Query Documents - Arrays - Exact Match on an Array', function(){
+// https://docs.mongodb.org/manual/tutorial/query-documents/#single-element-satisfies-the-criteria
+describe('Find - Tutorial - Query Documents - Arrays - Single Element Satisfies the Criteria', function(){
 
   function runSpec(connect) {
 
@@ -47,14 +47,28 @@ describe('Find - Tutorial - Query Documents - Arrays - Exact Match on an Array',
     });
 
     specify('query', function(){
-      return collection.find({ ratings: [ 5, 8, 9 ] })
+      return collection.find({ ratings: { $elemMatch: { $gt: 5, $lt: 9 } } })
         .toArray()
         .then(function(documents){
           Expect(documents).to.be.instanceOf(Array);
-          Expect(documents).to.have.lengthOf(1);
+          Expect(documents).to.have.lengthOf(2);
 
-          Expect(documents[0]._id).to.equal(5);
-          Expect(Compare.equal(documents[0], { "_id" : 5, "type" : "food", "item" : "aaa", "ratings" : [ 5, 8, 9 ] })).to.equal(true);
+          Expect(documents[0]._id).to.be.oneOf([
+            5, 7
+          ]);
+          Expect(documents[1]._id).to.be.oneOf([
+            5, 7
+          ]);
+
+          Expect((
+            Compare.equal({ "_id" : 5, "type" : "food", "item" : "aaa", "ratings" : [ 5, 8, 9 ] }, documents[0]) ||
+            Compare.equal({ "_id" : 5, "type" : "food", "item" : "aaa", "ratings" : [ 5, 8, 9 ] }, documents[1])
+          )).to.equal(true);
+
+          Expect((
+            Compare.equal({ "_id" : 7, "type" : "food", "item" : "ccc", "ratings" : [ 9, 5, 8 ] }, documents[0]) ||
+            Compare.equal({ "_id" : 7, "type" : "food", "item" : "ccc", "ratings" : [ 9, 5, 8 ] }, documents[1])
+          )).to.equal(true);
         });
     });
 

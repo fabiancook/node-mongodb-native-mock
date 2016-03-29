@@ -19,8 +19,8 @@ const Expect      = require('chai').expect,
   Setup       = require('../../../../setup'),
   Compare     = require('../../../../../lib/document/match/bson-compare');
 
-// https://docs.mongodb.org/manual/tutorial/query-documents/#exact-match-on-an-array
-describe('Find - Tutorial - Query Documents - Arrays - Exact Match on an Array', function(){
+// https://docs.mongodb.org/manual/tutorial/query-documents/#existence-check
+describe('Find - Tutorial - Query Documents - Existence Check', function(){
 
   function runSpec(connect) {
 
@@ -35,26 +35,33 @@ describe('Find - Tutorial - Query Documents - Arrays - Exact Match on an Array',
     });
 
     it('should allow inserts', function(){
-      return collection.insert({ _id: 5, type: "food", item: "aaa", ratings: [ 5, 8, 9 ] });
+      return collection.insert({ "_id" : 900, "item" : null });
     });
 
     it('should allow inserts', function(){
-      return collection.insert({ _id: 6, type: "food", item: "bbb", ratings: [ 5, 9 ] });
-    });
-
-    it('should allow inserts', function(){
-      return collection.insert({ _id: 7, type: "food", item: "ccc", ratings: [ 9, 5, 8 ] });
+      return collection.insert({ "_id" : 901 });
     });
 
     specify('query', function(){
-      return collection.find({ ratings: [ 5, 8, 9 ] })
+      return collection.find({ item: null })
         .toArray()
         .then(function(documents){
           Expect(documents).to.be.instanceOf(Array);
-          Expect(documents).to.have.lengthOf(1);
+          Expect(documents).to.have.lengthOf(2);
 
-          Expect(documents[0]._id).to.equal(5);
-          Expect(Compare.equal(documents[0], { "_id" : 5, "type" : "food", "item" : "aaa", "ratings" : [ 5, 8, 9 ] })).to.equal(true);
+          Expect(documents[0]._id).to.be.oneOf([
+            900, 901
+          ]);
+
+          Expect((
+            Compare.equal({ "_id" : 900, "item" : null }, documents[0]) ||
+            Compare.equal({ "_id" : 900, "item" : null }, documents[0])
+          )).to.equal(true);
+
+          Expect((
+            Compare.equal({ "_id" : 901 }, documents[1]) ||
+            Compare.equal({ "_id" : 901 }, documents[1])
+          )).to.equal(true);
         });
     });
 
