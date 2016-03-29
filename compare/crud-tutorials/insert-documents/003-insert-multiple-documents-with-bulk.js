@@ -20,7 +20,7 @@ const Expect      = require('chai').expect,
   Compare     = require('../../../lib/document/match/bson-compare');
 
 // https://docs.mongodb.org/manual/tutorial/insert-documents/#insert-multiple-documents-with-bulk
-describe.only('Tutorial - Insert Documents - Insert Multiple Documents with Bulk', function(){
+describe('Tutorial - Insert Documents - Insert Multiple Documents with Bulk', function(){
 
   function runSpec(connect) {
 

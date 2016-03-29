@@ -19,31 +19,10 @@ const Expect      = require('chai').expect,
   Setup       = require('../../setup'),
   Compare     = require('../../../lib/document/match/bson-compare');
 
-// https://docs.mongodb.org/manual/tutorial/insert-documents/#insert-an-array-of-documents
-describe('Tutorial - Insert Documents - Insert an Array of Documents', function(){
+// https://docs.mongodb.org/manual/tutorial/modify-documents/#update-an-embedded-field
+describe('Tutorial - Modify Documents - Update an embedded field', function(){
 
   function runSpec(connect) {
-
-    const myDocuments = [
-      {
-        item: "ABC2",
-        details: { model: "14Q3", manufacturer: "M1 Corporation" },
-        stock: [ { size: "M", qty: 50 } ],
-        category: "clothing"
-      },
-      {
-        item: "MNO2",
-        details: { model: "14Q3", manufacturer: "ABC Company" },
-        stock: [ { size: "S", qty: 5 }, { size: "M", qty: 5 }, { size: "L", qty: 1 } ],
-        category: "clothing"
-      },
-      {
-        item: "IJK2",
-        details: { model: "14Q2", manufacturer: "M5 Corporation" },
-        stock: [ { size: "S", qty: 5 }, { size: "L", qty: 1 } ],
-        category: "houseware"
-      }
-    ];
 
     var db, collection;
 
@@ -55,19 +34,31 @@ describe('Tutorial - Insert Documents - Insert an Array of Documents', function(
         })
     });
 
-    specify('Insert the documents', function(){
-      return collection.insert(myDocuments)
-        .then(function(result) {
-          Expect(result.insertedCount).to.equal(3)
-        })
+    it('should insert a document', function(){
+      return collection.insert({
+        item: 'ABC1',
+        category: 'snacks',
+        details: { cake: true, model: "14Q1" },
+        lastModified: new Date(2000, 0, 1)
+      });
     });
 
-    specify('Review the inserted document.', function(){
-      return collection.find()
+    specify('Update an embedded field', function(){
+      return collection.update(
+        { item: "ABC1" },
+        { $set: { "details.model": "14Q2" } }
+      )
+        .then(function(result) {
+          Expect(result.result.nModified).to.equal(1);
+        });
+    });
+
+    it('should update details.model', function(){
+      return collection.find({ item: "ABC1" })
         .toArray()
         .then(function(documents) {
-          Expect(documents).to.have.lengthOf(3);
-
+          Expect(documents).to.have.lengthOf(1);
+          Expect(documents[0].details.model).to.equal('14Q2');
         });
     });
 
