@@ -93,6 +93,9 @@ exports.setup = function(runExternalSpec) {
     }
 
     describe('Mock', function(){
+      before(MongoDbMock.setup);
+      after(MongoDbMock.teardown);
+
       runSpec(MongoDbMock.connect);
     });
 

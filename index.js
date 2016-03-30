@@ -17,7 +17,7 @@ const MongoDB     = require('mongodb'),
       MongoClient = require('./lib/mongo_client'),
       connect     = MongoClient.connect;
 
-Object.keys( MongoDB )
+Object.keys(MongoDB)
   .forEach(function(key){
     connect[key] = MongoDB[key];
   });
@@ -26,5 +26,7 @@ connect.MongoClient = MongoClient;
 connect.Server = require('./lib/server');
 
 connect.connect = connect;
+connect.teardown = MongoClient.teardown;
+connect.setup = MongoClient.setup;
 
 module.exports = connect;
