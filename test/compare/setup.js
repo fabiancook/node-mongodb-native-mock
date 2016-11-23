@@ -17,7 +17,7 @@
 const Expect      = require('chai').expect,
       MongoDb     = require('mongodb'),
       MongoDbMock = require('../../'),
-      UUID        = require('node-uuid'),
+      UUID        = require('uuid'),
       Q           = require('q');
 
 exports.setup = function(runExternalSpec) {

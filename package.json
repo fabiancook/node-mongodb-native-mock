@@ -14,9 +14,9 @@
     "lodash": "^4.5.1",
     "memdown": "^1.1.2",
     "natural": "^0.2.1",
-    "node-uuid": "^1.4.7",
     "q": "^1.4.1",
-    "sinon": "^1.17.3"
+    "sinon": "^1.17.3",
+    "uuid": "^3.0.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
